@@ -6,14 +6,14 @@ def sqlite_download_version(d):
     pvsplit = d.getVar('PV', True).split('.')
     return pvsplit[0] + ''.join([part.rjust(2,'0') for part in pvsplit[1:]])
 
-PE = "1"
+PE = "3"
 SQLITE_PV = "${@sqlite_download_version(d)}"
 SRC_URI = "http://www.sqlite.org/2014/sqlite-autoconf-${SQLITE_PV}.tar.gz"
 
-SRC_URI[md5sum] = "509ff98d8dc9729b618b7e96612079c6"
-SRC_URI[sha256sum] = "de5dc216e9289fabf027f78dbbface32ffc8c6341b7d841d0814b1a452ffdb8c"
-
 S = "${WORKDIR}/sqlite-autoconf-${SQLITE_PV}"
+
+SRC_URI[md5sum] = "0544ef6d7afd8ca797935ccc2685a9ed"
+SRC_URI[sha256sum] = "98c33abe4106e508e73fda648b2657ac9e969fe24695f543dcde68cc71f3091b"
 
 # Provide column meta-data API
 BUILD_CFLAGS += "-DSQLITE_ENABLE_COLUMN_METADATA"
