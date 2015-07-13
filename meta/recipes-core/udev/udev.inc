@@ -12,7 +12,14 @@ LIC_FILES_CHKSUM = "file://COPYING;md5=b234ee4d69f5fce4486a80fdaf4a4263 \
 
 LDFLAGS += "-lrt"
 
-DEPENDS = "glib-2.0 libusb usbutils pciutils glib-2.0-native gperf-native libxslt-native util-linux"
+PACKAGECONFIG ??= "${@base_contains('DISTRO_FEATURES', 'usbhost', 'usb', '', d)} \
+  ${@base_contains('DISTRO_FEATURES', 'pci', 'pci', '', d)}"
+
+DEPENDS = "glib-2.0 glib-2.0-native gperf-native libxslt-native util-linux"
+
+PACKAGECONFIG[usb] = "--with-usb-ids-path=${datadir}/usb.ids,--without-usb-ids-path,libusb usbutils"
+PACKAGECONFIG[pci] = "--with-pci-ids-path=${datadir}/pci.ids ac_cv_file__usr_share_pci_ids=no ac_cv_file__usr_share_hwdata_pci_ids=no ac_cv_file__usr_share_misc_pci_ids=yes,--without-pci-ids-path,pciutils"
+
 RPROVIDES_${PN} = "hotplug"
 
 PROVIDES = "libgudev"
@@ -39,10 +46,6 @@ RDEPENDS_${PN}-ptest += "make perl python"
 libexecdir = "${base_libdir}"
 EXTRA_OECONF = "--disable-introspection \
                 --with-rootlibdir=${base_libdir} \
-                --with-pci-ids-path=${datadir}/pci.ids \
-                ac_cv_file__usr_share_pci_ids=no \
-                ac_cv_file__usr_share_hwdata_pci_ids=no \
-                ac_cv_file__usr_share_misc_pci_ids=yes \
                 --sbindir=${base_sbindir} \
                 --libexecdir=${nonarch_base_libdir} \
                 --with-rootlibdir=${base_libdir} \
