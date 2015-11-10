@@ -253,7 +253,7 @@ kernel_do_install() {
 }
 do_install[prefuncs] += "package_get_auto_pr"
 
-addtask shared_workdir after do_compile before do_compile_kernelmodules
+addtask shared_workdir after do_compile_kernelmodules before do_strip
 addtask shared_workdir_setscene
 
 do_shared_workdir_setscene () {
