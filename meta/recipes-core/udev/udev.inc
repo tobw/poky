@@ -103,7 +103,7 @@ do_install_append () {
 	# hid2hci has moved to bluez4. removed in udev as of version 169
 	rm -f ${D}${base_libdir}/udev/hid2hci
 
-	echo 'udev_run="/var/run/udev"' >> ${D}${sysconfdir}/udev/udev.conf
+	echo 'udev_run="/run/udev"' >> ${D}${sysconfdir}/udev/udev.conf
 }
 
 # As systemd also builds udev, skip this package if we're doing a systemd build.
