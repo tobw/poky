@@ -16,7 +16,7 @@ LICENSE = "GPLv2+ & LGPLv2.1+"
 
 INC_PR = "r11"
 
-DEPENDS = "expat libcap libdaemon dbus glib-2.0"
+DEPENDS = "expat libcap libdaemon glib-2.0"
 
 SRC_URI = "http://avahi.org/download/avahi-${PV}.tar.gz \
           file://00avahi-autoipd \
@@ -28,6 +28,9 @@ SRC_URI = "http://avahi.org/download/avahi-${PV}.tar.gz \
           file://0001-avahi-fix-avahi-status-command-error-prompt.patch \
           file://reuseport-check.patch \
           "
+
+PACKAGECONFIG ??= "dbus"
+PACKAGECONFIG[dbus] = "--enable-dbus,--disable-dbus,dbus"
 
 USERADD_PACKAGES = "avahi-daemon avahi-autoipd"
 USERADD_PARAM_avahi-daemon = "--system --home /var/run/avahi-daemon \
@@ -129,8 +132,8 @@ do_install() {
 	# if /var/run become non-empty in the future, need to install it via volatile
 	rm -rf ${D}${localstatedir}/run
 	rmdir --ignore-fail-on-non-empty ${D}${localstatedir}
-	rm -rf ${D}${datadir}/dbus-1/interfaces
-	rmdir --ignore-fail-on-non-empty ${D}${datadir}/dbus-1
+	${@bb.utils.contains('PACKAGECONFIG','dbus','rm -rf ${D}${datadir}/dbus-1/interfaces','',d)}
+	${@bb.utils.contains('PACKAGECONFIG','dbus','rmdir --ignore-fail-on-non-empty ${D}${datadir}/dbus-1','',d)}
 	rm -rf ${D}${libdir}/avahi
 
 	install -d ${D}${sysconfdir}/udhcpc.d
